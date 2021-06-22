@@ -4,6 +4,7 @@ from torch.utils.data import dataloader
 from torch.utils.data import ConcatDataset
 
 # This is a simple wrapper function for ConcatDataset
+# 定义了连接不同的数据集
 class MyConcatDataset(ConcatDataset):
     def __init__(self, datasets):
         super(MyConcatDataset, self).__init__(datasets)
@@ -12,7 +13,7 @@ class MyConcatDataset(ConcatDataset):
     def set_scale(self, idx_scale):
         for d in self.datasets:
             if hasattr(d, 'set_scale'): d.set_scale(idx_scale)
-
+# 提供了train和test的的dataloader
 class Data:
     def __init__(self, args):
         self.loader_train = None

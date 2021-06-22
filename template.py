@@ -1,5 +1,7 @@
 def set_template(args):
     # Set the templates here
+
+    # find用于查找是否包含字符串，包含则返回起始索引值，不包含则返回-1
     if args.template.find('jpeg') >= 0:
         args.data_train = 'DIV2K_jpeg'
         args.data_test = 'DIV2K_jpeg'

@@ -1,6 +1,9 @@
 import argparse
 import template
 
+
+# 这里的意思是python *.py操作的时候，可以通过添加“--名字 值”的方式更改参数
+
 parser = argparse.ArgumentParser(description='EDSR and MDSR')
 
 parser.add_argument('--debug', action='store_true',

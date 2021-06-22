@@ -10,6 +10,7 @@ import imageio
 import torch
 import torch.utils.data as data
 
+# 提供了关于图像数据的导入路径，图像格式转换等功能。
 class SRData(data.Dataset):
     def __init__(self, args, name='', train=True, benchmark=False):
         self.args = args

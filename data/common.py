@@ -5,6 +5,7 @@ import skimage.color as sc
 
 import torch
 
+# 获得对应的小数据集进行训练
 def get_patch(*args, patch_size=96, scale=2, multi=False, input_large=False):
     ih, iw = args[0].shape[:2]
 
@@ -31,6 +32,7 @@ def get_patch(*args, patch_size=96, scale=2, multi=False, input_large=False):
 
     return ret
 
+# 将通道数转为图像训练要求的数值
 def set_channel(*args, n_channels=3):
     def _set_channel(img):
         if img.ndim == 2:
@@ -46,6 +48,7 @@ def set_channel(*args, n_channels=3):
 
     return [_set_channel(a) for a in args]
 
+# 将图像转换为需要的tensor类型
 def np2Tensor(*args, rgb_range=255):
     def _np2Tensor(img):
         np_transpose = np.ascontiguousarray(img.transpose((2, 0, 1)))
@@ -56,6 +59,7 @@ def np2Tensor(*args, rgb_range=255):
 
     return [_np2Tensor(a) for a in args]
 
+# 提供数据的翻折旋转等增强方式
 def augment(*args, hflip=True, rot=True):
     hflip = hflip and random.random() < 0.5
     vflip = rot and random.random() < 0.5

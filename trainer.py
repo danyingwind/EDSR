@@ -25,6 +25,7 @@ class Trainer():
 
         self.error_last = 1e8
 
+    # 提供了梯度裁剪功能，高于阈值的设为阈值
     def train(self):
         self.loss.step()
         epoch = self.optimizer.get_last_epoch() + 1
@@ -128,6 +129,7 @@ class Trainer():
 
         torch.set_grad_enabled(True)
 
+    # 提供将tensor设置为半精度的方法
     def prepare(self, *args):
         device = torch.device('cpu' if self.args.cpu else 'cuda')
         def _prepare(tensor):

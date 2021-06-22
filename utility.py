@@ -16,6 +16,7 @@ import torch
 import torch.optim as optim
 import torch.optim.lr_scheduler as lrs
 
+# 提供关于时间的功能
 class timer():
     def __init__(self):
         self.acc = 0
@@ -41,6 +42,7 @@ class timer():
     def reset(self):
         self.acc = 0
 
+# 提供保存模型/训练日志的功能
 class checkpoint():
     def __init__(self, args):
         self.args = args
@@ -180,6 +182,7 @@ def calc_psnr(sr, hr, scale, rgb_range, dataset=None):
 
     return -10 * math.log10(mse)
 
+# 提供优化器和模型训练到一定程度的保存
 def make_optimizer(args, target):
     '''
         make optimizer and scheduler together

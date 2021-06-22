@@ -9,6 +9,7 @@ import cv2
 
 from tqdm import tqdm
 
+# 提供视频超分辨率测试的功能
 class VideoTester():
     def __init__(self, args, my_model, ckp):
         self.args = args
