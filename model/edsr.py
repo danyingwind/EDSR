@@ -11,25 +11,35 @@ url = {
     'r32f256x4': 'https://cv.snu.ac.kr/research/EDSR/models/edsr_x4-4f62e9ef.pt'
 }
 
+# 这里需要args作为参数
 def make_model(args, parent=False):
     return EDSR(args)
 
+# 这里需要args，还需要common.py提供的default_conv函数
 class EDSR(nn.Module):
+    # 定义模型的各个组件
     def __init__(self, args, conv=common.default_conv):
         super(EDSR, self).__init__()
-
-        n_resblocks = args.n_resblocks
-        n_feats = args.n_feats
-        kernel_size = 3 
-        scale = args.scale[0]
+        n_resblocks = args.n_resblocks # 来自args的参数
+        n_feats = args.n_feats # 来自args的参数
+        kernel_size = 3  # 自定义参数
+        scale = args.scale[0] # 来自args的参数
         act = nn.ReLU(True)
+
+        # 这里还不太明白url的作用是什么
         url_name = 'r{}f{}x{}'.format(n_resblocks, n_feats, scale)
         if url_name in url:
             self.url = url[url_name]
         else:
             self.url = None
-        self.sub_mean = common.MeanShift(args.rgb_range)
+
+        # 来自common.py中定义的函数
+        self.sub_mean = common.MeanShift(args.rgb_range) 
         self.add_mean = common.MeanShift(args.rgb_range, sign=1)
+
+
+
+        #==========================================开始定义模型==========================================#
 
         # define head module
         m_head = [conv(args.n_colors, n_feats, kernel_size)]
@@ -48,10 +58,12 @@ class EDSR(nn.Module):
             conv(n_feats, args.n_colors, kernel_size)
         ]
 
+        # 这里是给各个模块进行重命名
         self.head = nn.Sequential(*m_head)
         self.body = nn.Sequential(*m_body)
         self.tail = nn.Sequential(*m_tail)
-
+        #================================================模型结束=============================================#
+    # 定义模型的前向传播流程
     def forward(self, x):
         x = self.sub_mean(x)
         x = self.head(x)
