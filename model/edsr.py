@@ -17,7 +17,7 @@ def make_model(args, parent=False):
 
 # 这里需要args，还需要common.py提供的default_conv函数
 class EDSR(nn.Module):
-    # 定义模型的各个组件
+    # 定义模型的各个组件==
     def __init__(self, args, conv=common.default_conv):
         super(EDSR, self).__init__()
         n_resblocks = args.n_resblocks # 来自args的参数
