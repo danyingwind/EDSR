@@ -26,7 +26,7 @@ class EDSR(nn.Module):
         scale = args.scale[0] # 来自args的参数
         act = nn.ReLU(True)
 
-        # 这里还不太明白url的作用是什么.用于制定下载模型的位置
+        # 这里还不太明白url的作用是什么.用于指定下载模型的位置
         # 这里只会对中括号进行内容替换，'r''f''x'都会保留
         url_name = 'r{}f{}x{}'.format(n_resblocks, n_feats, scale) 
         if url_name in url:
