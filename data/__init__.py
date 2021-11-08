@@ -17,7 +17,7 @@ class MyConcatDataset(ConcatDataset):
 class Data:
     def __init__(self, args):
         self.loader_train = None
-        if not args.test_only:
+        if not args.test_only: # args.test_only默认为true
             datasets = []
             for d in args.data_train:
                 module_name = d if d.find('DIV2K-Q') < 0 else 'DIV2KJPEG'

@@ -72,6 +72,7 @@ parser.add_argument('--precision', type=str, default='single',
                     help='FP precision for test (single | half)')
 
 # Option for Residual dense network (RDN)
+# wdy用不到
 parser.add_argument('--G0', type=int, default=64,
                     help='default number of filters. (Use in RDN)')
 parser.add_argument('--RDNkSize', type=int, default=3,
@@ -80,6 +81,7 @@ parser.add_argument('--RDNconfig', type=str, default='B',
                     help='parameters config of RDN. (Use in RDN)')
 
 # Option for Residual channel attention network (RCAN)
+# wdy用不到
 parser.add_argument('--n_resgroups', type=int, default=10,
                     help='number of residual groups')
 parser.add_argument('--reduction', type=int, default=16,
@@ -89,7 +91,7 @@ parser.add_argument('--reduction', type=int, default=16,
 parser.add_argument('--reset', action='store_true',
                     help='reset the training')
 parser.add_argument('--test_every', type=int, default=1000,
-                    help='do test per every N batches')
+                    help='do test per every N batches') # test的频率
 parser.add_argument('--epochs', type=int, default=300,
                     help='number of epochs to train')
 parser.add_argument('--batch_size', type=int, default=16,
@@ -97,11 +99,11 @@ parser.add_argument('--batch_size', type=int, default=16,
 parser.add_argument('--split_batch', type=int, default=1,
                     help='split the batch into smaller chunks')
 parser.add_argument('--self_ensemble', action='store_true',
-                    help='use self-ensemble method for test')
+                    help='use self-ensemble method for test') # test的self_ensemble技巧
 parser.add_argument('--test_only', action='store_true',
-                    help='set this option to test the model')
+                    help='set this option to test the model') # test的开关
 parser.add_argument('--gan_k', type=int, default=1,
-                    help='k value for adversarial loss')
+                    help='k value for adversarial loss') # loss设置
 
 # Optimization specifications
 parser.add_argument('--lr', type=float, default=1e-4,

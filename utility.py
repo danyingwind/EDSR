@@ -44,34 +44,36 @@ class timer():
 
 # 提供保存模型/训练日志的功能
 class checkpoint():
+
+    # 配置关于文件路径的信息，主要是生成路径
     def __init__(self, args):
         self.args = args
         self.ok = True
-        self.log = torch.Tensor()
+        self.log = torch.Tensor() # torch.Tensor()是一个python类，torch.tensor()是一个python函数
         now = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
 
         if not args.load:
-            if not args.save:
-                args.save = now
+            if not args.save: # args.save是保存的文件名，默认值为'test'；args.load是加载的文件名，默认值为''
+                args.save = now # 如果args.load为空，则新建文件。
             self.dir = os.path.join('..', 'experiment', args.save)
         else:
-            self.dir = os.path.join('..', 'experiment', args.load)
+            self.dir = os.path.join('..', 'experiment', args.load) # 加载指定
             if os.path.exists(self.dir):
                 self.log = torch.load(self.get_path('psnr_log.pt'))
                 print('Continue from epoch {}...'.format(len(self.log)))
             else:
                 args.load = ''
 
-        if args.reset:
+        if args.reset: # 判断是否重新开始训练，默认值为true
             os.system('rm -rf ' + self.dir)
             args.load = ''
 
-        os.makedirs(self.dir, exist_ok=True)
+        os.makedirs(self.dir, exist_ok=True) # 创建目标目录以及所有的中间目录，exist_ok=True表示目录已存在也不报错
         os.makedirs(self.get_path('model'), exist_ok=True)
-        for d in args.data_test:
+        for d in args.data_test: # 测试数据集的名字，默认为'DIV2K'
             os.makedirs(self.get_path('results-{}'.format(d)), exist_ok=True)
 
-        open_type = 'a' if os.path.exists(self.get_path('log.txt'))else 'w'
+        open_type = 'a' if os.path.exists(self.get_path('log.txt'))else 'w' # a表示在文件末尾追加，w表示清空后写入
         self.log_file = open(self.get_path('log.txt'), open_type)
         with open(self.get_path('config.txt'), open_type) as f:
             f.write(now + '\n\n')
@@ -84,6 +86,7 @@ class checkpoint():
     def get_path(self, *subdir):
         return os.path.join(self.dir, *subdir)
 
+    # 记录训练过程中的相关信息
     def save(self, trainer, epoch, is_best=False):
         trainer.model.save(self.get_path('model'), epoch, is_best=is_best)
         trainer.loss.save(self.dir)
@@ -148,7 +151,7 @@ class checkpoint():
         for p in self.process: p.join()
 
     def save_results(self, dataset, filename, save_list, scale):
-        if self.args.save_results:
+        if self.args.save_results: # args.save_results表示是否保存输出的结果，默认为true
             filename = self.get_path(
                 'results-{}'.format(dataset.dataset.name),
                 '{}_x{}_'.format(filename, scale)
@@ -156,7 +159,7 @@ class checkpoint():
 
             postfix = ('SR', 'LR', 'HR')
             for v, p in zip(save_list, postfix):
-                normalized = v[0].mul(255 / self.args.rgb_range)
+                normalized = v[0].mul(255 / self.args.rgb_range) # args.rgb_range表示RGB的最大值，默认为255
                 tensor_cpu = normalized.byte().permute(1, 2, 0).cpu()
                 self.queue.put(('{}{}.png'.format(filename, p), tensor_cpu))
 
@@ -190,11 +193,13 @@ def make_optimizer(args, target):
     # optimizer
     trainable = filter(lambda x: x.requires_grad, target.parameters())
     kwargs_optimizer = {'lr': args.lr, 'weight_decay': args.weight_decay}
+    # args.lr是学习率，默认1e-8,
+    # weight_decay，权重衰减又称为L2正则化，让权重衰减到更小的值来在一定程度上减少模型过拟合的问题，默认为0
 
     if args.optimizer == 'SGD':
         optimizer_class = optim.SGD
         kwargs_optimizer['momentum'] = args.momentum
-    elif args.optimizer == 'ADAM':
+    elif args.optimizer == 'ADAM': # 默认为ADAM
         optimizer_class = optim.Adam
         kwargs_optimizer['betas'] = args.betas
         kwargs_optimizer['eps'] = args.epsilon
@@ -203,8 +208,8 @@ def make_optimizer(args, target):
         kwargs_optimizer['eps'] = args.epsilon
 
     # scheduler
-    milestones = list(map(lambda x: int(x), args.decay.split('-')))
-    kwargs_scheduler = {'milestones': milestones, 'gamma': args.gamma}
+    milestones = list(map(lambda x: int(x), args.decay.split('-'))) # 学习率衰减step，默认为200，表示迭代200次衰减一次
+    kwargs_scheduler = {'milestones': milestones, 'gamma': args.gamma} # 学习率衰减的倍数，默认为0.5
     scheduler_class = lrs.MultiStepLR
 
     class CustomOptimizer(optimizer_class):
